@@ -58,6 +58,9 @@ pipeline:
 
   - uses: autoconf/make
 
+  - runs: |
+      sed -i.bak 's/#define CURL_VERSION .*/#define CURL_VERSION "${{package.version}}"/g' src/tool_version.h
+
   - uses: autoconf/make-install
 
   - uses: strip
