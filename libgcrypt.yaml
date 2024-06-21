@@ -1,7 +1,7 @@
 package:
   name: libgcrypt
-  version: 1.10.3
-  epoch: 2
+  version: 1.11.0
+  epoch: 0
   description: General purpose crypto library based on the code used in GnuPG
   copyright:
     - license: LGPL-2.1-or-later
@@ -14,16 +14,25 @@ environment:
       - build-base
       - busybox
       - ca-certificates-bundle
+      - gettext-dev
       - libgpg-error-dev
+      - libtool
       - texinfo
 
 pipeline:
-  - uses: fetch
+  - uses: git-checkout
     with:
-      expected-sha256: 8b0870897ac5ac67ded568dcfadf45969cfa8a6beb0fd60af2a9eadc2a3272aa
-      uri: https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-${{package.version}}.tar.bz2
+      repository: git://git.gnupg.org/libgcrypt.git
+      tag: libgcrypt-${{package.version}}
+      expected-commit: 9d94d7846cde272b8b1519ba96e53967bf0b90d2
+
+  - runs: |
+      ./autogen.sh --force
 
   - uses: autoconf/configure
+    with:
+      opts: |
+        --enable-maintainer-mode
 
   - uses: autoconf/make
 
